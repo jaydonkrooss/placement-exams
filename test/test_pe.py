@@ -1,12 +1,11 @@
 # standard libraries
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Union
 
 # third-party libraries
 from django.core.management import call_command
 from django.test import TestCase
-from django.utils.timezone import utc
 
 # Local libraries
 from pe.models import Report, Exam, Submission
@@ -62,7 +61,7 @@ class LoadFixturesTestCase(TestCase):
                 "sa_code": "PP",
                 "course_id": 888888,
                 "assignment_id": 111111,
-                "default_time_filter": datetime(2020, 6, 1, 0, 0, 0, tzinfo=utc)
+                "default_time_filter": datetime(2020, 6, 1, 0, 0, 0, tzinfo=timezone.utc)
             }
         )
 
@@ -79,7 +78,7 @@ class LoadFixturesTestCase(TestCase):
                 "sa_code": "PV",
                 "course_id": 888888,
                 "assignment_id": 111112,
-                "default_time_filter": datetime(2020, 5, 1, 0, 0, 0, tzinfo=utc)
+                "default_time_filter": datetime(2020, 5, 1, 0, 0, 0, tzinfo=timezone.utc)
             }
         )
 
@@ -104,7 +103,7 @@ class LoadFixturesTestCase(TestCase):
         placement_exam = Exam.objects.get(sa_code='PP')
         self.assertEqual(placement_exam.name, 'Potions Placement Advanced')
         self.assertEqual(placement_exam.course_id, 888889)
-        self.assertEqual(placement_exam.default_time_filter, datetime(2020, 6, 2, 12, 0, 0, tzinfo=utc))
+        self.assertEqual(placement_exam.default_time_filter, datetime(2020, 6, 2, 12, 0, 0, tzinfo=timezone.utc))
 
         # Test Potions Validation report and assignment_id changed
         validation_exam = Exam.objects.get(name='Potions Validation')
@@ -166,7 +165,7 @@ class LoadFixturesTestCase(TestCase):
                 "report_id": 3,
                 "course_id": 999999,
                 "assignment_id": 222222,
-                "default_time_filter": datetime(2020, 7, 1, 0, 0, 0, tzinfo=utc)
+                "default_time_filter": datetime(2020, 7, 1, 0, 0, 0, tzinfo=timezone.utc)
             }
         )
 
@@ -199,10 +198,10 @@ class LoadFixturesTestCase(TestCase):
                 'attempt_num': 1,
                 "exam_id": 1,
                 "student_uniqname": "hpotter",
-                "submitted_timestamp": datetime(2020, 6, 12, 8, 15, 30, tzinfo=utc),
+                "submitted_timestamp": datetime(2020, 6, 12, 8, 15, 30, tzinfo=timezone.utc),
                 "score": 100.0,
                 "transmitted": True,
-                "transmitted_timestamp": datetime(2020, 6, 12, 12, 0, 30, tzinfo=utc)
+                "transmitted_timestamp": datetime(2020, 6, 12, 12, 0, 30, tzinfo=timezone.utc)
             }
         )
 
@@ -278,7 +277,7 @@ class CustomMethodsTestCase(TestCase):
         """
         potions_exam = Exam.objects.get(id=1)
         last_sub_graded_dt: Union[datetime, None] = potions_exam.get_last_sub_graded_datetime()
-        self.assertTrue(last_sub_graded_dt, datetime(2020, 6, 12, 12, 0, 30, tzinfo=utc))
+        self.assertTrue(last_sub_graded_dt, datetime(2020, 6, 12, 12, 0, 30, tzinfo=timezone.utc))
 
     def test_get_last_sub_graded_datetime_without_submissions(self):
         """
