@@ -44,7 +44,7 @@ class LoadFixturesTestCase(TestCase):
         # Test exams loaded
         exams_queryset = Exam.objects.all()
         self.assertTrue(exams_queryset.exists())
-        self.assertTrue(len(exams_queryset), 2)
+        self.assertEqual(len(exams_queryset), 2)
         if not exams_queryset.exists() and len(exams_queryset) != 2:
             return None
 
@@ -107,7 +107,7 @@ class LoadFixturesTestCase(TestCase):
 
         # Test Potions Validation report and assignment_id changed
         validation_exam = Exam.objects.get(name='Potions Validation')
-        self.assertTrue(validation_exam.assignment_id, 111113)
+        self.assertEqual(validation_exam.assignment_id, 111113)
 
         new_report_queryset = Report.objects.filter(id=2)
         self.assertTrue(new_report_queryset.exists())
@@ -129,7 +129,7 @@ class LoadFixturesTestCase(TestCase):
 
         # Test previous Potions report remains and new DADA report was added
         report_queryset = Report.objects.all()
-        self.assertTrue(len(report_queryset), 2)
+        self.assertEqual(len(report_queryset), 3)
         self.assertTrue(report_queryset.filter(id=1).exists())
 
         dada_queryset = report_queryset.filter(id=3)
@@ -148,9 +148,9 @@ class LoadFixturesTestCase(TestCase):
 
         # Test previous exams remain and new DADA Placement exam added
         exams_queryset = Exam.objects.all()
-        self.assertTrue(len(exams_queryset), 3)
-        previous_queryset = exams_queryset.filter(name__in=['Potions Placement Advancecd', 'Potions Validation'])
-        self.assertTrue(len(previous_queryset), 2)
+        self.assertEqual(len(exams_queryset), 3)
+        previous_queryset = exams_queryset.filter(name__in=['Potions Placement Advanced', 'Potions Validation'])
+        self.assertEqual(len(previous_queryset), 2)
 
         data_exam_queryset = exams_queryset.filter(name='DADA Placement')
         self.assertTrue(data_exam_queryset.exists())
@@ -277,7 +277,7 @@ class CustomMethodsTestCase(TestCase):
         """
         potions_exam = Exam.objects.get(id=1)
         last_sub_graded_dt: Union[datetime, None] = potions_exam.get_last_sub_graded_datetime()
-        self.assertTrue(last_sub_graded_dt, datetime(2020, 6, 12, 12, 0, 30, tzinfo=timezone.utc))
+        self.assertEqual(last_sub_graded_dt, datetime(2020, 6, 12, 16, 0, 0, tzinfo=timezone.utc))
 
     def test_get_last_sub_graded_datetime_without_submissions(self):
         """
